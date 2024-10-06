@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "fast-tut"
+version = "0.1.0"
+description = ""
+authors = ["mikehentges <mhentges@comcast.net>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = "^0.115.0"
+uvicorn = "^0.31.0"
+httpx = "^0.27.2"
+
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.6.9"
+pytest = "^8.3.3"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
