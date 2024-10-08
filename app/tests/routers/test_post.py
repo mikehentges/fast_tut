@@ -4,7 +4,7 @@ from httpx import AsyncClient
 
 async def create_post(body: str, async_client: AsyncClient) -> dict:
     response = await async_client.post(
-        "/post/",
+        "/post",
         json={"body": body},
     )
     return response.json()
@@ -12,7 +12,7 @@ async def create_post(body: str, async_client: AsyncClient) -> dict:
 
 async def create_comment(body: str, post_id: int, async_client: AsyncClient) -> dict:
     response = await async_client.post(
-        "/comment/",
+        "/comment",
         json={"body": body, "post_id": post_id},
     )
     return response.json()
@@ -33,18 +33,18 @@ async def test_create_post(async_client: AsyncClient):
     body = "Test Post"
 
     response = await async_client.post(
-        "/post/",
+        "/post",
         json={"body": body},
     )
 
     assert response.status_code == 201
-    assert {"id": 0, "body": body}.items() <= response.json().items()
+    assert {"id": 1, "body": body}.items() <= response.json().items()
 
 
 @pytest.mark.anyio
 async def test_create_post_missing_data(async_client: AsyncClient):
     response = await async_client.post(
-        "/post/",
+        "/post",
         json={},
     )
 
@@ -53,7 +53,7 @@ async def test_create_post_missing_data(async_client: AsyncClient):
 
 @pytest.mark.anyio
 async def test_get_all_posts(async_client: AsyncClient, created_post: dict):
-    response = await async_client.get("/post/")
+    response = await async_client.get("/post")
 
     assert response.status_code == 200
     assert response.json() == [created_post]
@@ -64,13 +64,13 @@ async def test_create_comment(async_client: AsyncClient, created_post: dict):
     body = "Test Comment"
 
     response = await async_client.post(
-        "/comment/",
+        "/comment",
         json={"body": body, "post_id": created_post["id"]},
     )
 
     assert response.status_code == 201
     assert {
-        "id": 0,
+        "id": 1,
         "body": body,
         "post_id": created_post["id"],
     }.items() <= response.json().items()
@@ -90,6 +90,6 @@ async def test_get_comments_on_post(
 async def test_get_post_with_comments(
     async_client: AsyncClient, created_post: dict, created_comment: dict
 ):
-    response = await async_client.get("/post/22/")
+    response = await async_client.get("/post/22")
 
     assert response.status_code == 404
